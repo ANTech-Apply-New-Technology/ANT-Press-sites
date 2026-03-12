@@ -2,9 +2,14 @@
 set -euo pipefail
 
 # This script runs as the CMD. It:
-# 1. Lets the stock WordPress entrypoint set up wp-config.php and start Apache
-# 2. Waits for WP to be ready in the background
-# 3. Runs WP-CLI install + generates application password
+# 1. Fixes Apache MPM at runtime (in case build cache skipped it)
+# 2. Lets the stock WordPress entrypoint set up wp-config.php and start Apache
+# 3. Waits for WP to be ready in the background
+# 4. Runs WP-CLI install + generates application password
+
+# Fix MPM conflict at runtime — disable event, keep prefork (mod_php needs it)
+a2dismod mpm_event 2>/dev/null || true
+a2enmod mpm_prefork 2>/dev/null || true
 
 # Start the background setup process
 (
