@@ -1,65 +1,63 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Wait for MySQL to be ready
-MAX_TRIES=30
-TRIES=0
-until mysqladmin ping -h"${WORDPRESS_DB_HOST:-db}" --silent 2>/dev/null; do
-    TRIES=$((TRIES + 1))
-    if [ "$TRIES" -ge "$MAX_TRIES" ]; then
-        echo "ERROR: MySQL not ready after $MAX_TRIES attempts" >&2
-        exit 1
-    fi
-    echo "Waiting for MySQL... ($TRIES/$MAX_TRIES)"
-    sleep 2
-done
+# This script runs as the CMD. It:
+# 1. Lets the stock WordPress entrypoint set up wp-config.php and start Apache
+# 2. Waits for WP to be ready in the background
+# 3. Runs WP-CLI install + generates application password
 
-# Run the default WordPress entrypoint to set up wp-config.php
-docker-entrypoint.sh apache2 -v > /dev/null 2>&1 || true
+# Start the background setup process
+(
+    # Wait for WordPress to respond
+    MAX_TRIES=60
+    TRIES=0
+    until curl -sf http://localhost/ > /dev/null 2>&1; do
+        TRIES=$((TRIES + 1))
+        if [ "$TRIES" -ge "$MAX_TRIES" ]; then
+            echo "WP-SETUP: WordPress not ready after $MAX_TRIES attempts" >&2
+            exit 1
+        fi
+        sleep 3
+    done
 
-# Install WordPress if not already installed
-if ! sudo -u www-data wp core is-installed --path=/var/www/html 2>/dev/null; then
-    WP_URL="${WP_HOME:-http://localhost}"
-    WP_TITLE="${WP_SITE_TITLE:-ANT-Press Site}"
-    WP_ADMIN_USER="${WP_ADMIN_USER:-admin}"
-    WP_ADMIN_PASS="${WP_ADMIN_PASS:-$(openssl rand -base64 16)}"
-    WP_ADMIN_EMAIL="${WP_ADMIN_EMAIL:-admin@antpress.local}"
+    echo "WP-SETUP: WordPress is responding, running setup..."
 
-    sudo -u www-data wp core install \
-        --path=/var/www/html \
-        --url="$WP_URL" \
-        --title="$WP_TITLE" \
-        --admin_user="$WP_ADMIN_USER" \
-        --admin_password="$WP_ADMIN_PASS" \
-        --admin_email="$WP_ADMIN_EMAIL" \
-        --skip-email
+    # Install WordPress if not already installed
+    if ! wp core is-installed --path=/var/www/html --allow-root 2>/dev/null; then
+        WP_URL="${WP_HOME:-http://localhost}"
+        WP_TITLE="${WP_SITE_TITLE:-ANT-Press Site}"
+        WP_ADMIN="${WP_ADMIN_USER:-admin}"
+        WP_PASS="${WP_ADMIN_PASS:-$(head -c 24 /dev/urandom | base64)}"
+        WP_EMAIL="${WP_ADMIN_EMAIL:-admin@antpress.dev}"
 
-    # Set permalink structure
-    sudo -u www-data wp rewrite structure '/%postname%/' --path=/var/www/html
+        wp core install \
+            --path=/var/www/html \
+            --url="$WP_URL" \
+            --title="$WP_TITLE" \
+            --admin_user="$WP_ADMIN" \
+            --admin_password="$WP_PASS" \
+            --admin_email="$WP_EMAIL" \
+            --skip-email \
+            --allow-root
 
-    # Generate application password for REST API access
-    APP_PASSWORD=$(sudo -u www-data wp user application-password create "$WP_ADMIN_USER" "ant-press-api" --path=/var/www/html --porcelain 2>/dev/null || echo "")
+        # Set permalink structure
+        wp rewrite structure '/%postname%/' --path=/var/www/html --allow-root
+        wp rewrite flush --path=/var/www/html --allow-root
 
-    if [ -n "$APP_PASSWORD" ]; then
+        # Generate application password for REST API access
+        APP_PASSWORD=$(wp user application-password create "$WP_ADMIN" "ant-press-api" \
+            --path=/var/www/html --porcelain --allow-root 2>/dev/null || echo "")
+
         echo "=========================================="
         echo "ANT-PRESS SETUP COMPLETE"
         echo "URL: $WP_URL"
-        echo "Admin: $WP_ADMIN_USER"
-        echo "Admin Password: $WP_ADMIN_PASS"
+        echo "Admin: $WP_ADMIN / $WP_PASS"
         echo "API App Password: $APP_PASSWORD"
         echo "=========================================="
-
-        # Write credentials to a file the backend can read via a callback
-        cat > /tmp/ant-press-credentials.json <<EOF
-{
-    "wp_url": "$WP_URL",
-    "wp_username": "$WP_ADMIN_USER",
-    "wp_admin_password": "$WP_ADMIN_PASS",
-    "wp_app_password": "$APP_PASSWORD"
-}
-EOF
+    else
+        echo "WP-SETUP: WordPress already installed, skipping."
     fi
-fi
+) &
 
-# Hand off to Apache
-exec apache2-foreground
+# Hand off to the stock WordPress entrypoint (sets up wp-config.php + starts Apache)
+exec docker-entrypoint.sh apache2-foreground
