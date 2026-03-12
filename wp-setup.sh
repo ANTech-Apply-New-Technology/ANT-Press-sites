@@ -44,6 +44,18 @@ set -euo pipefail
         wp rewrite structure '/%postname%/' --path=/var/www/html --allow-root
         wp rewrite flush --path=/var/www/html --allow-root
 
+        # Force-enable application passwords (required for HTTP/non-SSL environments)
+        wp eval "add_filter('wp_is_application_passwords_available', '__return_true');" \
+            --path=/var/www/html --allow-root 2>/dev/null || true
+
+        # Add must-use plugin to persistently enable app passwords on HTTP
+        mkdir -p /var/www/html/wp-content/mu-plugins
+        cat > /var/www/html/wp-content/mu-plugins/force-app-passwords.php <<'MUEOF'
+<?php
+// Force-enable application passwords on non-SSL (for Railway/dev environments)
+add_filter('wp_is_application_passwords_available', '__return_true');
+MUEOF
+
         # Generate application password for REST API access
         APP_PASSWORD=$(wp user application-password create "$WP_ADMIN" "ant-press-api" \
             --path=/var/www/html --porcelain --allow-root 2>/dev/null || echo "")
