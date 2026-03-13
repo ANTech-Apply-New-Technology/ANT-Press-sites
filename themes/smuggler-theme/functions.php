@@ -1,6 +1,6 @@
 <?php
 /**
- * Smuggler Theme functions and definitions
+ * JAMA Maskin Theme functions and definitions
  *
  * @package Smuggler_Theme
  * @since 1.0.0
