@@ -340,3 +340,64 @@ button:focus-visible,
 		transition: none;
 	}
 }
+
+
+/* ── JAMA Maskin Orange Accents ─────────────────────── */
+:root {
+    --smuggler-secondary: #E8731A;
+}
+
+/* Service card top border → orange */
+.smuggler-card {
+    border-top-color: #E8731A !important;
+}
+
+/* Service card heading → orange */
+.smuggler-card h4 {
+    color: #E8731A !important;
+}
+
+/* Outline buttons → orange border + text */
+.wp-block-button.is-style-outline .wp-block-button__link {
+    border-color: #E8731A !important;
+    color: #E8731A !important;
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link:hover {
+    background-color: #E8731A !important;
+    color: #FFFFFF !important;
+}
+
+/* Filled buttons → orange */
+.wp-block-button:not(.is-style-outline) .wp-block-button__link {
+    background-color: #E8731A !important;
+}
+
+.wp-block-button:not(.is-style-outline) .wp-block-button__link:hover {
+    background-color: #D4650F !important;
+}
+
+/* Stat numbers → subtle orange */
+.smuggler-stat-number {
+    color: #1C2333 !important;
+}
+
+/* Header logo */
+.smuggler-logo {
+    letter-spacing: 0.15em !important;
+}
+
+/* Footer accent line */
+.smuggler-footer-logo::after {
+    background-color: #E8731A;
+}
+
+/* Link hover → orange */
+a:hover {
+    color: #E8731A;
+}
+
+/* Scrollbar thumb */
+::-webkit-scrollbar-thumb {
+    background: #E8731A;
+}

@@ -20,13 +20,13 @@
 					"slug": "primary"
 				},
 				{
-					"color": "#3D6B99",
-					"name": "Secondary (Ocean Blue)",
+					"color": "#E8731A",
+					"name": "Accent (Orange)",
 					"slug": "secondary"
 				},
 				{
-					"color": "#1C2333",
-					"name": "Accent (Dark Navy)",
+					"color": "#E8731A",
+					"name": "Accent (Orange)",
 					"slug": "accent"
 				},
 				{
@@ -86,19 +86,58 @@
 			"blockGap": true,
 			"margin": true,
 			"padding": true,
-			"units": ["%", "px", "em", "rem", "vh", "vw"],
+			"units": [
+				"%",
+				"px",
+				"em",
+				"rem",
+				"vh",
+				"vw"
+			],
 			"spacingScale": {
 				"steps": 0
 			},
 			"spacingSizes": [
-				{ "name": "1", "size": "0.25rem", "slug": "10" },
-				{ "name": "2", "size": "0.5rem", "slug": "20" },
-				{ "name": "3", "size": "1rem", "slug": "30" },
-				{ "name": "4", "size": "1.5rem", "slug": "40" },
-				{ "name": "5", "size": "2rem", "slug": "50" },
-				{ "name": "6", "size": "3rem", "slug": "60" },
-				{ "name": "7", "size": "5rem", "slug": "70" },
-				{ "name": "8", "size": "7rem", "slug": "80" }
+				{
+					"name": "1",
+					"size": "0.25rem",
+					"slug": "10"
+				},
+				{
+					"name": "2",
+					"size": "0.5rem",
+					"slug": "20"
+				},
+				{
+					"name": "3",
+					"size": "1rem",
+					"slug": "30"
+				},
+				{
+					"name": "4",
+					"size": "1.5rem",
+					"slug": "40"
+				},
+				{
+					"name": "5",
+					"size": "2rem",
+					"slug": "50"
+				},
+				{
+					"name": "6",
+					"size": "3rem",
+					"slug": "60"
+				},
+				{
+					"name": "7",
+					"size": "5rem",
+					"slug": "70"
+				},
+				{
+					"name": "8",
+					"size": "7rem",
+					"slug": "80"
+				}
 			]
 		},
 		"typography": {
@@ -111,7 +150,9 @@
 							"fontFamily": "Inter",
 							"fontStyle": "normal",
 							"fontWeight": "300 700",
-							"src": ["file:./assets/fonts/inter-variable.woff2"]
+							"src": [
+								"file:./assets/fonts/inter-variable.woff2"
+							]
 						}
 					],
 					"fontFamily": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -129,7 +170,9 @@
 							"fontFamily": "JetBrains Mono",
 							"fontStyle": "normal",
 							"fontWeight": "400 500",
-							"src": ["file:./assets/fonts/jetbrains-mono-variable.woff2"]
+							"src": [
+								"file:./assets/fonts/jetbrains-mono-variable.woff2"
+							]
 						}
 					],
 					"fontFamily": "'JetBrains Mono', 'Fira Code', monospace",
@@ -139,43 +182,64 @@
 			],
 			"fontSizes": [
 				{
-					"fluid": { "min": "0.75rem", "max": "0.875rem" },
+					"fluid": {
+						"min": "0.75rem",
+						"max": "0.875rem"
+					},
 					"name": "Extra Small",
 					"size": "0.875rem",
 					"slug": "x-small"
 				},
 				{
-					"fluid": { "min": "0.875rem", "max": "1rem" },
+					"fluid": {
+						"min": "0.875rem",
+						"max": "1rem"
+					},
 					"name": "Small",
 					"size": "1rem",
 					"slug": "small"
 				},
 				{
-					"fluid": { "min": "1rem", "max": "1.125rem" },
+					"fluid": {
+						"min": "1rem",
+						"max": "1.125rem"
+					},
 					"name": "Medium",
 					"size": "1.125rem",
 					"slug": "medium"
 				},
 				{
-					"fluid": { "min": "1.25rem", "max": "1.5rem" },
+					"fluid": {
+						"min": "1.25rem",
+						"max": "1.5rem"
+					},
 					"name": "Large",
 					"size": "1.5rem",
 					"slug": "large"
 				},
 				{
-					"fluid": { "min": "1.75rem", "max": "2.25rem" },
+					"fluid": {
+						"min": "1.75rem",
+						"max": "2.25rem"
+					},
 					"name": "Extra Large",
 					"size": "2.25rem",
 					"slug": "x-large"
 				},
 				{
-					"fluid": { "min": "2rem", "max": "3rem" },
+					"fluid": {
+						"min": "2rem",
+						"max": "3rem"
+					},
 					"name": "2X Large",
 					"size": "3rem",
 					"slug": "xx-large"
 				},
 				{
-					"fluid": { "min": "2.5rem", "max": "4rem" },
+					"fluid": {
+						"min": "2.5rem",
+						"max": "4rem"
+					},
 					"name": "3X Large",
 					"size": "4rem",
 					"slug": "xxx-large"
@@ -194,8 +258,8 @@
 			"button": {
 				":hover": {
 					"color": {
-						"background": "var(--wp--preset--color--primary)",
-						"text": "var(--wp--preset--color--white)"
+						"background": "#D4650F",
+						"text": "#FFFFFF"
 					},
 					"border": {
 						"color": "var(--wp--preset--color--primary)"
@@ -219,8 +283,8 @@
 					"width": "1px"
 				},
 				"color": {
-					"background": "transparent",
-					"text": "var(--wp--preset--color--primary)"
+					"background": "#E8731A",
+					"text": "#FFFFFF"
 				},
 				"spacing": {
 					"padding": {
@@ -298,7 +362,7 @@
 			"link": {
 				":hover": {
 					"color": {
-						"text": "var(--wp--preset--color--secondary)"
+						"text": "#E8731A"
 					},
 					"typography": {
 						"textDecoration": "none"
@@ -434,32 +498,44 @@
 	"customTemplates": [
 		{
 			"name": "page-boats",
-			"postTypes": ["page"],
+			"postTypes": [
+				"page"
+			],
 			"title": "Boats Page"
 		},
 		{
 			"name": "page-racing",
-			"postTypes": ["page"],
+			"postTypes": [
+				"page"
+			],
 			"title": "Racing Page"
 		},
 		{
 			"name": "page-services",
-			"postTypes": ["page"],
+			"postTypes": [
+				"page"
+			],
 			"title": "Services Page"
 		},
 		{
 			"name": "page-contact",
-			"postTypes": ["page"],
+			"postTypes": [
+				"page"
+			],
 			"title": "Contact Page"
 		},
 		{
 			"name": "page-om-oss",
-			"postTypes": ["page"],
+			"postTypes": [
+				"page"
+			],
 			"title": "Om Oss Page"
 		},
 		{
 			"name": "page-produkter",
-			"postTypes": ["page"],
+			"postTypes": [
+				"page"
+			],
 			"title": "Produkter Page"
 		}
 	]
