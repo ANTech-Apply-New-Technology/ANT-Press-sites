@@ -35,7 +35,7 @@ function smuggler_customizer_register( $wp_customize ) {
 
 	$fields = array(
 		'company_name'    => array( 'label' => 'Företagsnamn', 'default' => 'JAMA Maskin' ),
-		'company_address' => array( 'label' => 'Adress', 'default' => 'Kråkviksv. 8, 761 94 Norrtälje' ),
+		'company_address' => array( 'label' => 'Adress', 'default' => '' ),
 		'company_phone'   => array( 'label' => 'Telefon', 'default' => '' ),
 		'company_email'   => array( 'label' => 'E-post', 'default' => '' ),
 		'company_org_nr'  => array( 'label' => 'Org.nr', 'default' => '' ),
@@ -269,14 +269,14 @@ function smuggler_fallback_menu_col1() {
 	echo '<ul><li><a href="/tjanster/">Markarbeten</a></li><li><a href="/tjanster/">Grundläggning</a></li><li><a href="/tjanster/">Byggarbeten</a></li><li><a href="/tjanster/">Maskinuthyrning</a></li></ul>';
 }
 function smuggler_fallback_menu_col2() {
-	echo '<ul><li><a href="/om-oss/">Om oss</a></li><li><a href="/tjänster/">Tjänster</a></li><li><a href="/produkter/">Produkter</a></li><li><a href="/racing/">Racing</a></li></ul>';
+	echo '<ul><li><a href="/om-oss/">Om oss</a></li><li><a href="/tjanster/">Tjänster</a></li><li><a href="/kontakt/">Kontakt</a></li></ul>';
 }
 function smuggler_fallback_menu_col3() {
-	echo '<ul><li><a href="/kontakt/">Kontakta oss</a></li><li><a href="tel:+46000000000">Telefon</a></li></ul>';
+	echo '<ul><li><a href="/kontakt/">Begär offert</a></li><li><a href="/kontakt/">Kontakta oss</a></li></ul>';
 }
 
 function smuggler_menu_overlay() {
-	$address = smuggler_company( 'company_address', 'Kråkviksv. 8, 761 94 Norrtälje' );
+	$address = smuggler_company( 'company_address', '' );
 	$address_lines = str_replace( ', ', '<br>', esc_html( $address ) );
 	?>
 	<div class="smuggler-menu-overlay" aria-hidden="true">
