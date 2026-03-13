@@ -72,4 +72,6 @@ a2enmod mpm_prefork 2>/dev/null || true
     # Set JAMA Maskin theme customizer values
     # Smuggler is a block theme - content via REST API
 
+) &
+
 exec docker-entrypoint.sh apache2-foreground
