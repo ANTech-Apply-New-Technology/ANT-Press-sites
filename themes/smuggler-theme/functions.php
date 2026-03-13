@@ -34,7 +34,7 @@ function smuggler_customizer_register( $wp_customize ) {
 	) );
 
 	$fields = array(
-		'company_name'    => array( 'label' => 'Företagsnamn', 'default' => 'Smugglerbåtar AB' ),
+		'company_name'    => array( 'label' => 'Företagsnamn', 'default' => 'JAMA Maskin' ),
 		'company_address' => array( 'label' => 'Adress', 'default' => 'Kråkviksv. 8, 761 94 Norrtälje' ),
 		'company_phone'   => array( 'label' => 'Telefon', 'default' => '' ),
 		'company_email'   => array( 'label' => 'E-post', 'default' => '' ),
@@ -266,7 +266,7 @@ add_shortcode( 'svera_kalender', 'smuggler_svera_kalender_shortcode' );
  * Once the customer creates menus in Appearance > Menus, these are replaced.
  */
 function smuggler_fallback_menu_col1() {
-	echo '<ul><li><a href="/batar/">Smuggler 21</a></li><li><a href="/batar/">Smuggler 24</a></li><li><a href="/batar/">Smuggler 28</a></li><li><a href="/batar/">Smuggler RS</a></li></ul>';
+	echo '<ul><li><a href="/tjanster/">Markarbeten</a></li><li><a href="/tjanster/">Grundläggning</a></li><li><a href="/tjanster/">Byggarbeten</a></li><li><a href="/tjanster/">Maskinuthyrning</a></li></ul>';
 }
 function smuggler_fallback_menu_col2() {
 	echo '<ul><li><a href="/om-oss/">Om oss</a></li><li><a href="/tjänster/">Tjänster</a></li><li><a href="/produkter/">Produkter</a></li><li><a href="/racing/">Racing</a></li></ul>';
@@ -285,7 +285,7 @@ function smuggler_menu_overlay() {
 			<!-- Desktop: multi-column layout (editable via Appearance > Menus) -->
 			<div class="smuggler-menu-columns">
 				<div class="smuggler-menu-col">
-					<h3><?php echo esc_html( wp_get_nav_menu_name( 'overlay-col-1' ) ?: 'Båtar' ); ?></h3>
+					<h3><?php echo esc_html( wp_get_nav_menu_name( 'overlay-col-1' ) ?: 'Tjänster' ); ?></h3>
 					<?php wp_nav_menu( array(
 						'theme_location'  => 'overlay-col-1',
 						'container'       => false,
@@ -321,7 +321,7 @@ function smuggler_menu_overlay() {
 				<?php
 				$mobile_location = has_nav_menu( 'overlay-mobile' ) ? 'overlay-mobile' : null;
 				$cols = array(
-					array( 'location' => 'overlay-col-1', 'label' => wp_get_nav_menu_name( 'overlay-col-1' ) ?: 'Båtar', 'fallback' => 'smuggler_fallback_menu_col1' ),
+					array( 'location' => 'overlay-col-1', 'label' => wp_get_nav_menu_name( 'overlay-col-1' ) ?: 'Tjänster', 'fallback' => 'smuggler_fallback_menu_col1' ),
 					array( 'location' => 'overlay-col-2', 'label' => wp_get_nav_menu_name( 'overlay-col-2' ) ?: 'Företaget', 'fallback' => 'smuggler_fallback_menu_col2' ),
 				);
 				foreach ( $cols as $col ) : ?>
