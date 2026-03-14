@@ -1,0 +1,342 @@
+/**
+ * Smuggler Theme — Custom CSS
+ * Additional animations and scroll effects beyond theme.json
+ */
+
+/* ─── Scroll-triggered fade-in ─── */
+.smuggler-fade-in {
+	opacity: 0;
+	transform: translateY(20px);
+	transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.smuggler-fade-in.is-visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* ─── Hero text animation ─── */
+.smuggler-hero .wp-block-cover__inner-container {
+	animation: heroFadeIn 1s ease 0.2s both;
+}
+
+@keyframes heroFadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* ─── Stat number count-up appearance ─── */
+.smuggler-stat-number {
+	font-family: var(--wp--preset--font-family--mono);
+}
+
+/* ─── Racing section ─── */
+.smuggler-racing {
+	position: relative;
+}
+
+/* ─── Partner name separators ─── */
+.smuggler-partners p + p::before {
+	content: '·';
+	margin-right: var(--wp--preset--spacing--40);
+	color: var(--smuggler-muted, #5A6270);
+	opacity: 0.4;
+}
+
+/* ─── Partner logo row spacing on mobile ─── */
+@media (max-width: 600px) {
+	.smuggler-partners .wp-block-group {
+		gap: var(--wp--preset--spacing--30);
+	}
+
+	.smuggler-partners p {
+		font-size: 0.9rem !important;
+	}
+
+	.smuggler-partners p + p::before {
+		display: none;
+	}
+}
+
+/* ─── Boat card image zoom on hover ─── */
+.smuggler-card .wp-block-image img {
+	transition: transform 0.4s ease;
+}
+
+.smuggler-card:hover .wp-block-image img {
+	transform: scale(1.03);
+}
+
+.smuggler-card .wp-block-image {
+	overflow: hidden;
+	border-radius: 4px;
+}
+
+/* ─── Footer social link hover ─── */
+.wp-block-social-links .wp-social-link:hover {
+	transform: translateY(-2px);
+	transition: transform 0.2s ease;
+}
+
+/* ─── Focus styles for accessibility ─── */
+a:focus-visible,
+button:focus-visible,
+.wp-block-button__link:focus-visible {
+	outline: 2px solid var(--smuggler-primary, #1C2333);
+	outline-offset: 2px;
+	box-shadow: 0 0 0 4px rgba(28, 35, 51, 0.2);
+}
+
+/* ─── Skip to content link ─── */
+.skip-to-content {
+	position: absolute;
+	top: -100%;
+	left: 50%;
+	transform: translateX(-50%);
+	background: var(--smuggler-primary, #1B2D45);
+	color: #fff;
+	padding: 0.75rem 1.5rem;
+	z-index: 9999;
+	border-radius: 0 0 4px 4px;
+	transition: top 0.2s ease;
+}
+
+.skip-to-content:focus {
+	top: 0;
+}
+
+/* ─── Price Calculator ─── */
+.smuggler-calculator {
+	max-width: 720px;
+	margin: 0 auto;
+	font-family: var(--wp--preset--font-family--inter);
+}
+
+.smuggler-calculator h3 {
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: var(--wp--preset--color--primary);
+	margin: 0 0 0.75rem 0;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.calc-inputs {
+	background: #fff;
+	border-radius: 6px;
+	padding: 1.5rem;
+	margin-bottom: 1.5rem;
+	border: 1px solid #e2e5ea;
+}
+
+.calc-row {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	margin-bottom: 0.75rem;
+}
+
+.calc-row label {
+	min-width: 130px;
+	font-weight: 500;
+	font-size: 0.95rem;
+	color: var(--wp--preset--color--foreground);
+}
+
+.calc-row input[type="number"] {
+	width: 100px;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid #d0d4da;
+	border-radius: 4px;
+	font-size: 1rem;
+	font-family: inherit;
+	background: #fff;
+}
+
+.calc-row select {
+	padding: 0.5rem 0.75rem;
+	border: 1px solid #d0d4da;
+	border-radius: 4px;
+	font-size: 0.9rem;
+	font-family: inherit;
+	background: #fff;
+	cursor: pointer;
+}
+
+.calc-area-display {
+	padding-top: 0.5rem;
+	font-size: 0.9rem;
+	color: var(--wp--preset--color--muted);
+}
+
+.calc-section {
+	background: #fff;
+	border-radius: 6px;
+	padding: 1.5rem;
+	margin-bottom: 1.5rem;
+	border: 1px solid #e2e5ea;
+}
+
+.calc-checkboxes {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.calc-checkboxes label {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.4rem 0;
+	font-size: 0.9rem;
+	color: var(--wp--preset--color--foreground);
+	cursor: pointer;
+	border-bottom: 1px solid #f0f1f3;
+}
+
+.calc-checkboxes label:last-child {
+	border-bottom: none;
+}
+
+.calc-checkboxes input[type="checkbox"] {
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+	accent-color: var(--wp--preset--color--primary);
+	cursor: pointer;
+}
+
+.calc-price-hint {
+	margin-left: auto;
+	font-size: 0.8rem;
+	color: var(--wp--preset--color--muted);
+	white-space: nowrap;
+}
+
+.calc-total {
+	background: var(--wp--preset--color--primary);
+	color: #fff;
+	border-radius: 6px;
+	padding: 1.25rem 1.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+}
+
+.calc-total-label {
+	font-size: 1.1rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.calc-total-price {
+	font-size: 1.75rem;
+	font-weight: 700;
+}
+
+.calc-disclaimer {
+	text-align: center;
+	font-size: 0.8rem;
+	color: var(--wp--preset--color--muted);
+	font-style: italic;
+	margin: 0;
+}
+
+@media (max-width: 600px) {
+	.calc-row {
+		flex-wrap: wrap;
+	}
+
+	.calc-row label {
+		min-width: 100%;
+		margin-bottom: 0.25rem;
+	}
+
+	.calc-price-hint {
+		font-size: 0.75rem;
+	}
+
+	.calc-total-price {
+		font-size: 1.4rem;
+	}
+}
+
+/* ─── News feed section (Nimbus list style) ─── */
+.smuggler-news-card {
+	transition: opacity 0.2s ease;
+	height: 100%;
+}
+
+.smuggler-news-card:hover {
+	opacity: 0.7;
+}
+
+/* ─── Contact protection — click-to-copy ─── */
+.cp-link {
+	cursor: pointer;
+	text-decoration: underline;
+	text-decoration-style: dotted;
+	text-underline-offset: 3px;
+}
+
+.cp-link:hover {
+	text-decoration-style: solid;
+}
+
+[data-cp] {
+	position: relative;
+	display: inline;
+}
+
+.cp-toast {
+	position: absolute;
+	bottom: calc(100% + 6px);
+	left: 50%;
+	transform: translateX(-50%) translateY(4px);
+	background: var(--smuggler-primary, #1C2333);
+	color: #fff;
+	font-size: 0.75rem;
+	font-weight: 600;
+	padding: 0.3rem 0.7rem;
+	border-radius: 4px;
+	white-space: nowrap;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.2s ease, transform 0.2s ease;
+	z-index: 10;
+}
+
+.cp-toast-show {
+	opacity: 1;
+	transform: translateX(-50%) translateY(0);
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+	.smuggler-fade-in {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+
+	.smuggler-hero .wp-block-cover__inner-container {
+		animation: none;
+	}
+
+	.smuggler-card .wp-block-image img {
+		transition: none;
+	}
+
+	.wp-block-social-links .wp-social-link:hover {
+		transform: none;
+		transition: none;
+	}
+}

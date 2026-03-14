@@ -1,0 +1,813 @@
+/*
+Theme Name: Nimbus Theme (Template)
+Theme URI: https://example.com
+Author: Your Name
+Author URI: https://example.com
+Description: Reusable WordPress block theme template. Nimbus Group-inspired design: serif italic headings, hamburger menu with fullscreen overlay, outline buttons, edge-to-edge alternating layouts, extreme whitespace, dark navy + white palette. Fork this and rename for new projects.
+Requires at least: 6.4
+Tested up to: 6.7
+Requires PHP: 8.0
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: nimbus-theme
+Tags: one-column, custom-colors, custom-menu, custom-logo, editor-style, featured-images, full-site-editing, wide-blocks, block-patterns, translation-ready
+*/
+
+/* ==========================================================================
+   Design Tokens — Nimbus Group-inspired
+   Almost no accent color. Restrained. White + dark navy only.
+   ========================================================================== */
+
+:root {
+	--smuggler-primary: #1C2333;
+	--smuggler-secondary: #3D6B99;
+	--smuggler-bg: #FFFFFF;
+	--smuggler-surface: #F5F5F3;
+	--smuggler-text: #1A1A2E;
+	--smuggler-muted: #6B7280;
+	--smuggler-border: #E5E7EB;
+	--smuggler-white: #FFFFFF;
+	--smuggler-transition: 0.3s ease;
+}
+
+/* ==========================================================================
+   Global
+   ========================================================================== */
+
+.wp-site-blocks > * {
+	margin-block-start: 0 !important;
+}
+
+html, body {
+	overflow-x: hidden;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html { scroll-behavior: auto; }
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+/* ==========================================================================
+   Header — Nimbus exact: logo center, Meny button right
+   ========================================================================== */
+
+.smuggler-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	transition: background-color var(--smuggler-transition), box-shadow var(--smuggler-transition);
+}
+
+body.admin-bar .smuggler-header { top: 32px; }
+@media screen and (max-width: 782px) {
+	body.admin-bar .smuggler-header { top: 46px; }
+}
+
+.smuggler-header-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	max-width: 1400px;
+	margin: 0 auto;
+	padding: 1rem 2rem;
+}
+
+.smuggler-header-left {
+	flex: 1;
+}
+
+/* Logo — center, Nimbus-style uppercase letter-spaced */
+.smuggler-logo {
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: 0.85rem;
+	font-weight: 400;
+	font-style: italic;
+	letter-spacing: 3px;
+	text-transform: uppercase;
+	text-decoration: none !important;
+	transition: opacity var(--smuggler-transition);
+	flex: 0 0 auto;
+}
+
+.smuggler-logo:hover { opacity: 0.7; }
+
+/* Meny button — Nimbus style */
+.smuggler-header-right {
+	flex: 1;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.smuggler-menu-toggle {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 0.4rem 0;
+	transition: opacity var(--smuggler-transition);
+}
+
+.smuggler-menu-toggle:hover { opacity: 0.7; }
+
+.smuggler-menu-label {
+	font-family: Inter, -apple-system, sans-serif;
+	font-size: 0.8rem;
+	font-weight: 400;
+	letter-spacing: 1px;
+}
+
+/* 9-dot grid icon (Nimbus 3x3 style) */
+.smuggler-menu-dots {
+	display: grid;
+	grid-template-columns: repeat(3, 3px);
+	gap: 3px;
+	width: auto;
+	height: auto;
+}
+
+.smuggler-menu-dots span {
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+	transition: background-color var(--smuggler-transition);
+}
+
+/* Transparent state: white text */
+.smuggler-header.is-transparent .smuggler-logo,
+.smuggler-header.is-transparent .smuggler-menu-label {
+	color: var(--smuggler-white);
+}
+
+.smuggler-header.is-transparent .smuggler-menu-dots span {
+	background-color: var(--smuggler-white);
+}
+
+/* Solid state: dark text */
+.smuggler-header.is-solid {
+	background-color: var(--smuggler-white);
+	box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+}
+
+.smuggler-header.is-solid .smuggler-logo,
+.smuggler-header.is-solid .smuggler-menu-label {
+	color: var(--smuggler-primary);
+}
+
+.smuggler-header.is-solid .smuggler-menu-dots span {
+	background-color: var(--smuggler-primary);
+}
+
+/* Menu open state: always white text (overlay is dark) */
+.smuggler-header.is-menu-open .smuggler-logo,
+.smuggler-header.is-menu-open .smuggler-menu-label {
+	color: var(--smuggler-white) !important;
+}
+
+.smuggler-header.is-menu-open .smuggler-menu-dots span {
+	background-color: var(--smuggler-white) !important;
+}
+
+.smuggler-header.is-menu-open {
+	background: transparent !important;
+	box-shadow: none !important;
+}
+
+/* Transparent on hero — very subtle gradient */
+.smuggler-header.is-transparent {
+	background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, transparent 100%);
+}
+
+/* ==========================================================================
+   Fullscreen Menu Overlay — Nimbus exact
+   ========================================================================== */
+
+.smuggler-menu-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 999;
+	background-color: var(--smuggler-primary);
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.4s ease, visibility 0.4s ease;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.smuggler-menu-overlay.is-open {
+	opacity: 1;
+	visibility: visible;
+}
+
+body.menu-is-open {
+	overflow: hidden;
+}
+
+.smuggler-menu-overlay-inner {
+	max-width: 1400px;
+	margin: 0 auto;
+	padding: 8rem 3rem 4rem;
+	padding-right: 30%;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+/* Desktop: multi-column links */
+.smuggler-menu-columns {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 4rem;
+}
+
+.smuggler-menu-col h3 {
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: 1.5rem;
+	font-weight: 400;
+	font-style: italic;
+	color: var(--smuggler-white);
+	margin-bottom: 1.5rem;
+}
+
+.smuggler-menu-col ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.smuggler-menu-col ul li {
+	margin-bottom: 0.75rem;
+}
+
+.smuggler-menu-col a {
+	color: rgba(255,255,255,0.5) !important;
+	text-decoration: none !important;
+	font-size: 0.95rem;
+	transition: color var(--smuggler-transition);
+}
+
+.smuggler-menu-col a:hover {
+	color: rgba(255,255,255,0.9) !important;
+}
+
+.smuggler-menu-address {
+	margin-top: 1.5rem;
+}
+
+.smuggler-menu-address p {
+	color: rgba(255,255,255,0.35);
+	font-size: 0.85rem;
+	line-height: 1.8;
+}
+
+/* Bottom CTA in overlay */
+.smuggler-menu-bottom {
+	margin-top: 4rem;
+	padding-top: 2rem;
+	border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.smuggler-menu-bottom-link {
+	color: rgba(255,255,255,0.5) !important;
+	text-decoration: none !important;
+	font-size: 0.85rem;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: color var(--smuggler-transition);
+}
+
+.smuggler-menu-bottom-link:hover {
+	color: rgba(255,255,255,0.9) !important;
+}
+
+/* Mobile menu: hidden on desktop */
+.smuggler-menu-mobile {
+	display: none;
+}
+
+/* Mobile: accordion layout — dark navy like Nimbus */
+@media (max-width: 768px) {
+	.smuggler-menu-overlay-inner {
+		padding: 6rem 1.5rem 2rem;
+		padding-left: 1.5rem;
+		justify-content: flex-start;
+	}
+
+	.smuggler-menu-columns {
+		display: none;
+	}
+
+	.smuggler-menu-mobile {
+		display: block;
+	}
+
+	.smuggler-menu-bottom {
+		display: none;
+	}
+
+	/* Accordion */
+	.smuggler-menu-accordion {
+		border-bottom: 1px solid rgba(255,255,255,0.1);
+	}
+
+	.smuggler-menu-accordion-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		background: none;
+		border: none;
+		padding: 1.25rem 0;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: 1.1rem;
+		font-weight: 400;
+		color: var(--smuggler-white);
+		cursor: pointer;
+	}
+
+	.accordion-arrow::after {
+		content: "\2193";
+		font-size: 1rem;
+		color: rgba(255,255,255,0.4);
+		transition: transform var(--smuggler-transition);
+	}
+
+	.smuggler-menu-accordion.is-expanded .accordion-arrow::after {
+		content: "\2191";
+	}
+
+	.smuggler-menu-accordion-body {
+		display: none;
+		padding-bottom: 1rem;
+	}
+
+	.smuggler-menu-accordion.is-expanded .smuggler-menu-accordion-body {
+		display: block;
+	}
+
+	.smuggler-menu-accordion-body a {
+		display: block;
+		padding: 0.5rem 0 0.5rem 0.5rem;
+		color: rgba(255,255,255,0.5) !important;
+		text-decoration: none !important;
+		font-size: 0.95rem;
+	}
+
+	.smuggler-menu-accordion-body a:hover {
+		color: rgba(255,255,255,0.9) !important;
+	}
+
+	.smuggler-menu-mobile-link {
+		display: block;
+		padding: 1.25rem 0;
+		border-bottom: 1px solid rgba(255,255,255,0.1);
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: 1.1rem;
+		color: var(--smuggler-white) !important;
+		text-decoration: none !important;
+	}
+}
+
+/* ==========================================================================
+   Hero — Cinematic, subtle overlay
+   ========================================================================== */
+
+.smuggler-hero .wp-block-cover {
+	min-height: 80vh !important;
+}
+
+.smuggler-hero .wp-block-cover__inner-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+/* ==========================================================================
+   Mission Statement — Large serif centered paragraph (Nimbus signature)
+   ========================================================================== */
+
+.nimbus-mission {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.nimbus-mission p {
+	font-family: Georgia, 'Times New Roman', serif;
+	font-style: italic;
+	font-size: clamp(1.1rem, 2vw, 1.35rem);
+	line-height: 1.8;
+	color: var(--smuggler-muted);
+	text-align: center;
+}
+
+/* ==========================================================================
+   Alternating Image-Text (Nimbus brands-page: edge-to-edge images)
+   ========================================================================== */
+
+.nimbus-alt-row {
+	display: grid !important;
+	grid-template-columns: 1fr 1fr;
+	gap: 0;
+	align-items: stretch;
+}
+
+/* Image columns: contain images edge-to-edge */
+.nimbus-alt-row .wp-block-column:has(> figure),
+.nimbus-alt-row .wp-block-column:has(> .wp-block-image) {
+	overflow: hidden;
+	min-height: 450px;
+}
+
+/* Text columns: never clip text, respect bounds */
+.nimbus-alt-row .wp-block-column[style*="padding"] {
+	min-width: 0;
+	box-sizing: border-box;
+	overflow-wrap: break-word;
+	word-break: break-word;
+	/* Cap padding so inline spacing values can never cause overflow */
+	padding: clamp(1.5rem, 4vw, 3rem) !important;
+}
+
+.nimbus-alt-row .wp-block-column[style*="padding"] > * {
+	max-width: 100%;
+}
+
+.nimbus-alt-row img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.nimbus-alt-row figure {
+	margin: 0;
+	height: 100%;
+}
+
+.nimbus-alt-row figure img {
+	height: 100%;
+}
+
+@media (max-width: 768px) {
+	.nimbus-alt-row {
+		grid-template-columns: 1fr !important;
+	}
+	.nimbus-alt-row .wp-block-column:has(> figure),
+	.nimbus-alt-row .wp-block-column:has(> .wp-block-image) {
+		min-height: 250px;
+	}
+	.nimbus-alt-row .wp-block-column[style*="padding"] {
+		padding: 2rem 1.25rem !important;
+	}
+}
+
+/* ==========================================================================
+   Cards — Clean, no shadow, thin top border
+   ========================================================================== */
+
+.smuggler-card {
+	background: var(--smuggler-white);
+	overflow: hidden;
+	transition: box-shadow var(--smuggler-transition);
+}
+
+.smuggler-card:hover {
+	box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.smuggler-services .smuggler-card {
+	border-top: 1px solid var(--smuggler-border);
+	border-left: none;
+}
+
+/* ==========================================================================
+   Stats — Serif numbers, dark navy
+   ========================================================================== */
+
+.smuggler-stat-number {
+	font-family: Georgia, 'Times New Roman', serif;
+	font-weight: 400;
+	font-style: italic;
+	font-size: clamp(2.5rem, 5vw, 4rem);
+	line-height: 1;
+	color: var(--smuggler-primary);
+}
+
+.smuggler-stat-label {
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 1.5px;
+	color: var(--smuggler-muted);
+	margin-top: 0.5rem;
+}
+
+/* ==========================================================================
+   Partner Logos
+   ========================================================================== */
+
+.smuggler-partners img {
+	max-height: 40px;
+	width: auto;
+	filter: grayscale(100%);
+	opacity: 0.4;
+	transition: filter var(--smuggler-transition), opacity var(--smuggler-transition);
+}
+
+.smuggler-partners img:hover {
+	filter: grayscale(0%);
+	opacity: 1;
+}
+
+/* ==========================================================================
+   Buttons — Nimbus: outline/ghost only, very thin, no fill
+   ========================================================================== */
+
+/* Force outline style on all theme buttons */
+.wp-block-button__link {
+	transition: all var(--smuggler-transition);
+}
+
+/* White outline buttons in dark sections */
+.has-racing-dark-background-color .wp-block-button__link,
+.has-primary-background-color .wp-block-button__link,
+[style*="background-color:#2A3A52"] .wp-block-button__link,
+.wp-block-cover .wp-block-button__link {
+	background: transparent !important;
+	color: var(--smuggler-white) !important;
+	border: 1px solid rgba(255,255,255,0.5) !important;
+}
+
+.has-racing-dark-background-color .wp-block-button__link:hover,
+.has-primary-background-color .wp-block-button__link:hover,
+[style*="background-color:#2A3A52"] .wp-block-button__link:hover,
+.wp-block-cover .wp-block-button__link:hover {
+	background: var(--smuggler-white) !important;
+	color: var(--smuggler-primary) !important;
+	border-color: var(--smuggler-white) !important;
+}
+
+/* Outline button in light sections */
+.wp-block-button.is-style-outline > .wp-block-button__link:not(.has-background):hover {
+	background-color: var(--smuggler-primary);
+	color: var(--smuggler-white);
+	border-color: var(--smuggler-primary);
+}
+
+/* ==========================================================================
+   Link styling
+   ========================================================================== */
+
+a {
+	text-decoration-thickness: 0.0625em !important;
+	text-underline-offset: 0.15em;
+}
+
+/* ==========================================================================
+   Footer — Nimbus: dark, multi-column, very structured
+   ========================================================================== */
+
+.smuggler-footer a {
+	color: rgba(255,255,255,0.5) !important;
+	text-decoration: none;
+	transition: color var(--smuggler-transition);
+}
+
+.smuggler-footer a:hover {
+	color: rgba(255,255,255,0.8) !important;
+}
+
+.smuggler-footer .wp-block-separator {
+	border-color: rgba(255,255,255,0.08) !important;
+	opacity: 1;
+}
+
+.smuggler-footer h3,
+.smuggler-footer .wp-block-heading {
+	font-family: Inter, sans-serif !important;
+	font-style: normal !important;
+	font-size: 0.7rem !important;
+	font-weight: 600 !important;
+	letter-spacing: 2px !important;
+	text-transform: uppercase !important;
+}
+
+.smuggler-footer-nav .wp-block-navigation a {
+	color: rgba(255,255,255,0.4) !important;
+	font-size: 0.75rem;
+}
+
+.smuggler-footer-nav .wp-block-navigation a:hover {
+	color: rgba(255,255,255,0.8) !important;
+}
+
+/* ==========================================================================
+   News / Press Releases — Nimbus list style (not cards)
+   ========================================================================== */
+
+.smuggler-news-card {
+	border-bottom: 1px solid var(--smuggler-border);
+	border-radius: 0 !important;
+	background: transparent !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+/* List-style: date + title on one line (Nimbus press release style) */
+.smuggler-news-list .smuggler-news-card {
+	gap: var(--wp--preset--spacing--40);
+}
+
+.smuggler-news-list .wp-block-post-title a {
+	text-decoration: none !important;
+	color: var(--smuggler-primary) !important;
+}
+
+.smuggler-news-list .wp-block-post-title a:hover {
+	color: var(--smuggler-secondary) !important;
+}
+
+/* Remove WordPress query block loading bar */
+.wp-block-query .wp-block-post-template::before,
+.smuggler-news-list .wp-block-post-template {
+	border-top: none !important;
+}
+
+/* Partners — remove underlines, Nimbus clean style */
+.smuggler-partners a {
+	text-decoration: none !important;
+	color: var(--smuggler-muted) !important;
+}
+
+.smuggler-partners a:hover {
+	color: var(--smuggler-primary) !important;
+}
+
+/* ==========================================================================
+   Two-Column CTA boxes (Nimbus "Investerare" / "Kontakt" style)
+   ========================================================================== */
+
+.nimbus-cta-boxes .wp-block-column {
+	transition: opacity var(--smuggler-transition);
+}
+
+.nimbus-cta-boxes .wp-block-column:hover {
+	opacity: 0.9;
+}
+
+/* ==========================================================================
+   Page Hero — Small hero for sub-pages (Nimbus style)
+   ========================================================================== */
+
+.nimbus-page-hero .wp-block-cover {
+	min-height: 40vh !important;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 768px) {
+	.smuggler-hero .wp-block-cover {
+		min-height: 65vh !important;
+	}
+}
+
+@media (max-width: 480px) {
+	.smuggler-stat-number {
+		font-size: clamp(1.5rem, 8vw, 2rem);
+	}
+}
+
+/* ==========================================================================
+   SVERA Calendar Table
+   ========================================================================== */
+
+.svera-kalender-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9rem;
+}
+
+.svera-kalender-table th,
+.svera-kalender-table td {
+	padding: 0.75rem 1rem;
+	text-align: left;
+	border-bottom: 1px solid var(--smuggler-border);
+}
+
+.svera-kalender-table thead th {
+	color: var(--smuggler-primary);
+	font-weight: 600;
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	border-bottom: 1px solid var(--smuggler-primary);
+}
+
+.svera-kalender-table tbody tr:hover {
+	background: var(--smuggler-surface);
+}
+
+.svera-kalender-source {
+	text-align: center;
+	font-size: 0.8rem;
+	color: var(--smuggler-muted);
+	margin-top: 1rem;
+}
+
+@media (max-width: 600px) {
+	.svera-hide-mobile { display: none; }
+	.svera-kalender-table th,
+	.svera-kalender-table td { padding: 0.5rem; font-size: 0.85rem; }
+}
+
+/* ==========================================================================
+   FAQ Accordion
+   ========================================================================== */
+
+details {
+	border-bottom: 1px solid var(--smuggler-border);
+	padding: 1rem 0;
+}
+
+details summary {
+	cursor: pointer;
+	font-weight: 400;
+	font-size: 1rem;
+	color: var(--smuggler-text);
+	list-style: none;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+details summary::-webkit-details-marker { display: none; }
+
+details summary::after {
+	content: "+";
+	font-size: 1.25rem;
+	font-weight: 300;
+	color: var(--smuggler-muted);
+}
+
+details[open] summary::after {
+	content: "\2212";
+}
+
+details p { margin-top: 0.75rem; }
+
+/* ==========================================================================
+   Price Calculator
+   ========================================================================== */
+
+.smuggler-calculator { max-width: 700px; margin: 0 auto; }
+.calc-inputs { margin-bottom: 2rem; }
+.calc-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.calc-row label { min-width: 120px; font-weight: 400; }
+.calc-row input[type="number"],
+.calc-row select {
+	padding: 0.4rem 0.5rem;
+	border: 1px solid var(--smuggler-border);
+	border-radius: 0;
+	font-size: 0.9rem;
+}
+.calc-area-display { margin-top: 0.5rem; font-size: 0.9rem; color: var(--smuggler-muted); }
+.calc-section { margin-bottom: 1.5rem; }
+.calc-section h3 { font-size: 1rem; margin-bottom: 0.75rem; }
+.calc-checkboxes label { display: block; padding: 0.4rem 0; font-size: 0.9rem; cursor: pointer; }
+.calc-price-hint { color: var(--smuggler-muted); font-size: 0.8rem; }
+.calc-total {
+	display: flex; justify-content: space-between; align-items: center;
+	padding: 1rem 0; border-top: 1px solid var(--smuggler-primary); margin-top: 1rem;
+}
+.calc-total-label { font-weight: 500; font-size: 1rem; }
+.calc-total-price {
+	font-family: Georgia, serif; font-size: 1.5rem; font-weight: 400;
+	color: var(--smuggler-primary);
+}
+.calc-disclaimer { font-size: 0.8rem; color: var(--smuggler-muted); margin-top: 0.75rem; font-style: italic; }
+
+/* ==========================================================================
+   Utility
+   ========================================================================== */
+
+.overflow-hidden { overflow: hidden; }
+.text-balance { text-wrap: balance; }
