@@ -6,10 +6,47 @@ set -euo pipefail
 # 2. Lets the stock WordPress entrypoint set up wp-config.php and start Apache
 # 3. Waits for WP to be ready in the background
 # 4. Runs WP-CLI install + generates application password
+# 5. Installs custom themes from ANT-Press repo via git sparse checkout
 
 # Fix MPM conflict at runtime — disable event, keep prefork (mod_php needs it)
 a2dismod mpm_event 2>/dev/null || true
 a2enmod mpm_prefork 2>/dev/null || true
+
+# --- Theme installation from ANT-Press repo ---
+install_themes() {
+    local THEME_REPO_URL="${THEME_REPO_URL:-https://github.com/ANTech-Apply-New-Technology/ANT-Press.git}"
+    local THEME_DIR="/var/www/html/wp-content/themes"
+    local TEMP_DIR="/tmp/ant-press-themes"
+
+    echo "WP-SETUP: Installing themes from ANT-Press repo..."
+
+    # Use GITHUB_TOKEN for private repo access if available
+    local CLONE_URL="$THEME_REPO_URL"
+    if [ -n "${GITHUB_TOKEN:-}" ]; then
+        CLONE_URL="https://${GITHUB_TOKEN}@github.com/ANTech-Apply-New-Technology/ANT-Press.git"
+    fi
+
+    # Clean up any previous attempt
+    rm -rf "$TEMP_DIR"
+
+    # Sparse checkout — only clone docker/themes/ (minimal download)
+    if git clone --depth 1 --filter=blob:none --sparse "$CLONE_URL" "$TEMP_DIR" 2>/dev/null; then
+        cd "$TEMP_DIR"
+        git sparse-checkout set docker/themes 2>/dev/null
+
+        if [ -d "$TEMP_DIR/docker/themes" ]; then
+            cp -r "$TEMP_DIR/docker/themes/"* "$THEME_DIR/" 2>/dev/null || true
+            INSTALLED=$(ls "$TEMP_DIR/docker/themes/" 2>/dev/null | tr '\n' ', ')
+            echo "WP-SETUP: Themes installed: $INSTALLED"
+        else
+            echo "WP-SETUP: WARNING — No themes found in repo" >&2
+        fi
+
+        rm -rf "$TEMP_DIR"
+    else
+        echo "WP-SETUP: WARNING — Could not clone theme repo, continuing without custom themes" >&2
+    fi
+}
 
 # Start the background setup process
 (
@@ -74,6 +111,10 @@ MUEOF
     else
         echo "WP-SETUP: WordPress already installed, skipping."
     fi
+
+    # Install themes (runs for BOTH fresh installs and existing sites)
+    install_themes
+
 ) &
 
 # Hand off to the stock WordPress entrypoint (sets up wp-config.php + starts Apache)

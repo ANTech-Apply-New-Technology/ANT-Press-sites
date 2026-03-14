@@ -3,6 +3,10 @@ FROM wordpress:6.7-php8.3-apache
 # Fix MPM conflict (disable event, keep prefork which mod_php needs)
 RUN a2dismod mpm_event 2>/dev/null; a2enmod mpm_prefork 2>/dev/null; true
 
+# Install git for theme cloning at boot
+RUN apt-get update && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install WP-CLI
 RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x /usr/local/bin/wp \
