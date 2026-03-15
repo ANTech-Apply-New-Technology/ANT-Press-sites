@@ -11,6 +11,9 @@ RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh
 # Copy themes
 COPY themes/ /var/www/html/wp-content/themes/
 
+# Copy mu-plugins (REST API extensions for theme config)
+COPY mu-plugins/ /var/www/html/wp-content/mu-plugins/
+
 # Copy setup script
 COPY wp-setup.sh /usr/local/bin/wp-setup.sh
 RUN chmod +x /usr/local/bin/wp-setup.sh
