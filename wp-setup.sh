@@ -39,6 +39,9 @@ install_themes_and_mu_plugins() {
             cp -r "$TEMP_DIR/docker/themes/"* "$THEME_DIR/" 2>/dev/null || true
             INSTALLED=$(ls "$TEMP_DIR/docker/themes/" 2>/dev/null | tr '\n' ', ')
             echo "WP-SETUP: Themes installed: $INSTALLED"
+            echo "WP-SETUP: DEBUG — Theme directory contents:"
+            ls -la "$THEME_DIR/" 2>&1
+            echo "WP-SETUP: DEBUG — Theme dir owner: $(stat -c '%U:%G %a' "$THEME_DIR" 2>/dev/null)"
         else
             echo "WP-SETUP: WARNING — No themes found in repo" >&2
         fi
@@ -58,6 +61,9 @@ install_themes_and_mu_plugins() {
             done
             MU_INSTALLED=$(ls "$TEMP_DIR/docker/mu-plugins/"*.php 2>/dev/null | xargs -n1 basename | tr '\n' ', ')
             echo "WP-SETUP: mu-plugins installed: $MU_INSTALLED"
+            echo "WP-SETUP: DEBUG — mu-plugins directory contents:"
+            ls -la "$MU_PLUGIN_DIR/" 2>&1
+            echo "WP-SETUP: DEBUG — mu-plugins dir owner: $(stat -c '%U:%G %a' "$MU_PLUGIN_DIR" 2>/dev/null)"
         else
             echo "WP-SETUP: WARNING — No mu-plugins found in repo" >&2
         fi
@@ -66,6 +72,13 @@ install_themes_and_mu_plugins() {
     else
         echo "WP-SETUP: WARNING — Could not clone theme repo, continuing without custom themes" >&2
     fi
+
+    # Fix ownership so Apache/PHP (www-data) can read themes and mu-plugins
+    chown -R www-data:www-data /var/www/html/wp-content/
+
+    echo "WP-SETUP: DEBUG — Full wp-content structure:"
+    find /var/www/html/wp-content -maxdepth 2 -type d 2>&1 || true
+    echo "WP-SETUP: DEBUG — Process running as: $(whoami)"
 }
 
 # Start the background setup process
