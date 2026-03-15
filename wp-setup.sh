@@ -24,14 +24,14 @@ install_themes_and_mu_plugins() {
     # Use GITHUB_TOKEN for private repo access if available
     local CLONE_URL="$REPO_URL"
     if [ -n "${GITHUB_TOKEN:-}" ]; then
-        CLONE_URL="https://${GITHUB_TOKEN}@github.com/ANTech-Apply-New-Technology/ANT-Press.git"
+        CLONE_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/ANTech-Apply-New-Technology/ANT-Press.git"
     fi
 
     # Clean up any previous attempt
     rm -rf "$TEMP_DIR"
 
     # Sparse checkout — only clone docker/themes/ and docker/mu-plugins/ (minimal download)
-    if git clone --depth 1 --filter=blob:none --sparse "$CLONE_URL" "$TEMP_DIR" 2>/dev/null; then
+    if git clone --depth 1 --filter=blob:none --sparse "$CLONE_URL" "$TEMP_DIR"; then
         cd "$TEMP_DIR"
         git sparse-checkout set docker/themes docker/mu-plugins 2>/dev/null
 
