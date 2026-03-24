@@ -7,6 +7,7 @@ set -euo pipefail
 # 3. Waits for WP to be ready in the background
 # 4. Runs WP-CLI install + generates application password
 # 5. Installs custom themes and mu-plugins from ANT-Press repo via git sparse checkout
+# 6. Conditionally installs WooCommerce when WC_ENABLED=true (ANT-693)
 
 # Fix MPM conflict at runtime — disable event, keep prefork (mod_php needs it)
 a2dismod mpm_event 2>/dev/null || true
@@ -81,6 +82,65 @@ install_themes_and_mu_plugins() {
     echo "WP-SETUP: DEBUG — Process running as: $(whoami)"
 }
 
+# --- WooCommerce conditional installation (ANT-693) ---
+install_woocommerce() {
+    if [ "${WC_ENABLED:-false}" != "true" ]; then
+        echo "WP-SETUP: WC_ENABLED is not true, skipping WooCommerce installation."
+        return 0
+    fi
+
+    echo "WP-SETUP: WC_ENABLED=true — Installing WooCommerce..."
+
+    # Install and activate WooCommerce
+    wp plugin install woocommerce --activate --path=/var/www/html --allow-root
+
+    echo "WP-SETUP: WooCommerce installed and activated."
+
+    # Generate WooCommerce REST API consumer key/secret via WP-CLI
+    # Uses wp eval to call the WC API key generation directly
+    WC_KEYS=$(wp eval '
+        if ( ! class_exists( "WooCommerce" ) ) {
+            echo "ERROR:WooCommerce not loaded";
+            return;
+        }
+        // Ensure WC tables exist
+        if ( ! get_option( "woocommerce_db_version" ) ) {
+            WC_Install::install();
+        }
+        global $wpdb;
+        $consumer_key    = "ck_" . wc_rand_hash();
+        $consumer_secret = "cs_" . wc_rand_hash();
+        $data = array(
+            "user_id"         => 1,
+            "description"     => "ANT-Press API",
+            "permissions"     => "read_write",
+            "consumer_key"    => wc_api_hash( $consumer_key ),
+            "consumer_secret" => $consumer_secret,
+            "truncated_key"   => substr( $consumer_key, -7 ),
+        );
+        $wpdb->insert( $wpdb->prefix . "woocommerce_api_keys", $data );
+        echo $consumer_key . " " . $consumer_secret;
+    ' --path=/var/www/html --allow-root 2>/dev/null || echo "")
+
+    if [ -n "$WC_KEYS" ] && [ "$WC_KEYS" != "ERROR:WooCommerce not loaded" ]; then
+        WC_CONSUMER_KEY=$(echo "$WC_KEYS" | awk '{print $1}')
+        WC_CONSUMER_SECRET=$(echo "$WC_KEYS" | awk '{print $2}')
+        echo "WP-SETUP: WooCommerce API keys generated."
+        echo "WC Consumer Key: $WC_CONSUMER_KEY"
+        echo "WC Consumer Secret: $WC_CONSUMER_SECRET"
+    else
+        WC_CONSUMER_KEY=""
+        WC_CONSUMER_SECRET=""
+        echo "WP-SETUP: WARNING — Could not generate WooCommerce API keys" >&2
+    fi
+
+    echo "=========================================="
+    echo "WOOCOMMERCE SETUP COMPLETE"
+    echo "WC Consumer Key: ${WC_CONSUMER_KEY:-N/A}"
+    echo "WC Consumer Secret: ${WC_CONSUMER_SECRET:-N/A}"
+    echo "=========================================="
+}
+
 # Start the background setup process
 (
     # Wait for WordPress to respond
@@ -147,6 +207,9 @@ MUEOF
 
     # Install themes and mu-plugins (runs for BOTH fresh installs and existing sites)
     install_themes_and_mu_plugins
+
+    # Install WooCommerce if WC_ENABLED=true (ANT-693)
+    install_woocommerce
 
 ) &
 
